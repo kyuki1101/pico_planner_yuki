@@ -3,6 +3,16 @@ class PlanItemsController < ApplicationController
     @plan_items = PlanItem.order(:starts_at)
   end
 
+  # GET (collection)
+  def of_today
+    t0 = Time.current.beginning_of_day
+    t1 = t0.advance(hours:24)
+    @plan_items = PlanItem
+      .where('starts_at >= ? AND starts_at < ?', t0,t1)
+      .order(:starts_at)
+    render action: :index
+  end
+
   def show
     @plan_item = PlanItem.find(params[:id])
   end
