@@ -31,6 +31,6 @@ ends_at: time0.advance(hours:25)
 PlanItem.create!(
 name: '姉の出張',
 description: '札幌',
-starts_at: time0.advance(days:-1,hours:10),
-ends_at: time0.advance(hours:17)
+starts_at: time0.advance(days:-1, hours:10),
+ends_at: time0.advance(days:1, hours:17)
 )

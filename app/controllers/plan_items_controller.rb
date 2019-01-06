@@ -8,8 +8,12 @@ class PlanItemsController < ApplicationController
     t0 = Time.current.beginning_of_day
     t1 = t0.advance(hours:24)
     @plan_items = PlanItem
-      .where('starts_at >= ? AND starts_at < ?', t0,t1)
+      .where('starts_at >= ? AND starts_at < ?', t0, t1)
+      .or(PlanItem.where('ends_at > ? AND ends_at <= ?', t0, t1))
       .order(:starts_at)
+    @continued_plan_items = PlanItem
+      .where('starts_st < ? AND ends_at >?',t0 ,t1)
+      .order(:starts_st)
     render action: :index
   end
 
