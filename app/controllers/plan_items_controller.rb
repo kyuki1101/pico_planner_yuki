@@ -1,16 +1,28 @@
 class PlanItemsController < ApplicationController
   def index
     @plan_items = PlanItem.order(:starts_at)
+
+    t0 = Time.current.beginning_of_day
+    t1 = t0.advance(hours: 24)
+    @continued_plan_items = PlanItem
+    .where('starts_at < ? AND ends_at > ?', t0, t1)
+    .order(:starts_at)
+    render action: :index
   end
 
   # GET (collection)
   def of_today
     t0 = Time.current.beginning_of_day
-    t1 = t0.advance(hours:24)
+    t1 = t0.advance(hours: 24)
     @plan_items = PlanItem
-      .where('starts_at >= ? AND starts_at < ?', t0,t1)
-      .order(:starts_at)
+    .where('starts_at >= ? AND starts_at < ?', t0, t1)
+    .or(PlanItem.where('ends_at > ? AND ends_at <= ?', t0, t1))
+    .order(:starts_at)
+    @continued_plan_items = PlanItem
+    .where('starts_at < ? AND ends_at > ?', t0, t1)
+    .order(:starts_at)
     render action: :index
+
   end
 
   def show
